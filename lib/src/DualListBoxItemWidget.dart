@@ -11,6 +11,13 @@ class DualListBoxItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: Row(
+        children: [
+          Icon(icon),
+          Text(title),
+        ],
+      ),
+    );
   }
 }

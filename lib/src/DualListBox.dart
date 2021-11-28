@@ -81,9 +81,6 @@ class DualListBox extends StatelessWidget {
         );
       }),
     );
-    // return Responsive.isDesktop(context) || Responsive.isTablet(context)
-    //     ? _buildDesktopWidget(context)
-    //     : _buildMobileWidget(context);
   }
 
   _buildMobileWidget(BuildContext context, DualListBoxViewModel consumer) {
@@ -108,19 +105,27 @@ class DualListBox extends StatelessWidget {
   }
 
   Widget _listsWidget(BuildContext context, DualListBoxViewModel consumer) {
+    consumer.seperateLists(items);
     return Container(
       height: listHeight,
       width: widgetWidth,
       child: Row(
         children: [
-          _listWidget(consumer.unAssignedList),
-          _listWidget(consumer.assignedList),
+          Expanded(child: _listWidget(consumer.unAssignedList)),
+          Expanded(child: _listWidget(consumer.assignedList)),
         ],
       ),
     );
   }
 
-  Widget _listWidget(List<DualListBoxItem> unAssignedList) {
-    return Container();
+  Widget _listWidget(List<DualListBoxItem> list) {
+    List<Widget> listWigets = [];
+    for (var i = 0; i < list.length; i++) {
+      listWigets.add(list[i].widget ?? Text(list[i].title ?? ' '));
+    }
+    return ListView(
+      shrinkWrap: true,
+      children: listWigets,
+    );
   }
 }

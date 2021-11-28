@@ -15,4 +15,16 @@ class DualListBoxViewModel with ChangeNotifier {
     _unAssignedList = value;
     notifyListeners();
   }
+
+  seperateLists(List<DualListBoxItem> allList) {
+    _assignedList = [];
+    _unAssignedList = [];
+    for (var i = 0; i < allList.length; i++) {
+      if (allList[i].isSelected ?? false) {
+        _assignedList.add(allList[i]);
+      } else {
+        _unAssignedList.add(allList[i]);
+      }
+    }
+  }
 }
