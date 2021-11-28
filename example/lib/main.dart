@@ -1,5 +1,6 @@
 import 'package:dual_list_box/dual_list_box.dart';
 import 'package:flutter/material.dart';
+import 'package:lenore_ui/lenore_ui.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,7 +37,64 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: const DualListBox(),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Card(
+            elevation: 11,
+            child: DualListBox(
+              title: 'Demo',
+              widgetWidth: 750,
+              items: [
+                DualListBoxItem(
+                  title: 'Apple',
+                  isSelected: false,
+                  type: 'fruit',
+                  widget: const DualListBoxItemWidget(
+                    title: 'Apple',
+                    icon: Icons.restaurant,
+                  ),
+                ),
+                DualListBoxItem(
+                  title: 'Orange',
+                  isSelected: false,
+                  type: 'fruit',
+                  widget: const DualListBoxItemWidget(
+                    title: 'Apple',
+                    icon: Icons.restaurant,
+                  ),
+                ),
+                DualListBoxItem(
+                  title: 'Banana',
+                  isSelected: true,
+                  type: 'fruit',
+                  widget: const DualListBoxItemWidget(
+                    title: 'Apple',
+                    icon: Icons.restaurant,
+                  ),
+                ),
+                DualListBoxItem(
+                  title: 'Carrot',
+                  isSelected: false,
+                  type: 'vegetable',
+                  widget: const DualListBoxItemWidget(
+                    title: 'Carrot',
+                    icon: Icons.restaurant_menu,
+                  ),
+                ),
+                DualListBoxItem(
+                  title: 'Corn',
+                  isSelected: true,
+                  type: 'vegetable',
+                  widget: const DualListBoxItemWidget(
+                    title: 'Corn',
+                    icon: Icons.restaurant_menu,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

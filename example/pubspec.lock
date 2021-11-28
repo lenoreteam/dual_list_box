@@ -96,7 +96,7 @@ packages:
     source: hosted
     version: "0.17.0"
   lenore_ui:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: lenore_ui
       url: "https://pub.dartlang.org"
