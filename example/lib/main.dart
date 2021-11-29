@@ -38,59 +38,67 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SingleChildScrollView(
-        child: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Card(
             elevation: 11,
-            child: DualListBox(
-              title: 'Demo',
-              widgetWidth: 750,
-              items: [
-                DualListBoxItem(
-                  title: 'Apple',
-                  isSelected: false,
-                  type: 'fruit',
-                  widget: const DualListBoxItemWidget(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  right: 16, left: 16, top: 16, bottom: 16),
+              child: DualListBox(
+                title: 'Demo',
+                widgetWidth: 750,
+                backgroundColor: Colors.transparent,
+                items: [
+                  DualListBoxItem(
                     title: 'Apple',
-                    icon: Icons.restaurant,
+                    isSelected: false,
+                    type: 'fruit',
+                    widget: const DualListBoxItemWidget(
+                      title: 'Apple',
+                      icon: Icons.restaurant,
+                    ),
                   ),
-                ),
-                DualListBoxItem(
-                  title: 'Orange',
-                  isSelected: false,
-                  type: 'fruit',
-                  widget: const DualListBoxItemWidget(
-                    title: 'Apple',
-                    icon: Icons.restaurant,
+                  DualListBoxItem(
+                    title: 'Orange',
+                    isSelected: false,
+                    type: 'fruit',
+                    widget: const DualListBoxItemWidget(
+                      title: 'Apple',
+                      icon: Icons.restaurant,
+                    ),
                   ),
-                ),
-                DualListBoxItem(
-                  title: 'Banana',
-                  isSelected: true,
-                  type: 'fruit',
-                  widget: const DualListBoxItemWidget(
-                    title: 'Apple',
-                    icon: Icons.restaurant,
+                  DualListBoxItem(
+                    title: 'Banana',
+                    isSelected: true,
+                    type: 'fruit',
+                    widget: const DualListBoxItemWidget(
+                      title: 'Apple',
+                      icon: Icons.restaurant,
+                    ),
                   ),
-                ),
-                DualListBoxItem(
-                  title: 'Carrot',
-                  isSelected: false,
-                  type: 'vegetable',
-                  widget: const DualListBoxItemWidget(
+                  DualListBoxItem(
                     title: 'Carrot',
-                    icon: Icons.restaurant_menu,
+                    isSelected: false,
+                    type: 'vegetable',
+                    widget: const DualListBoxItemWidget(
+                      title: 'Carrot',
+                      icon: Icons.restaurant_menu,
+                    ),
                   ),
-                ),
-                DualListBoxItem(
-                  title: 'Corn',
-                  isSelected: true,
-                  type: 'vegetable',
-                  widget: const DualListBoxItemWidget(
+                  DualListBoxItem(
                     title: 'Corn',
-                    icon: Icons.restaurant_menu,
+                    isSelected: true,
+                    type: 'vegetable',
+                    widget: const DualListBoxItemWidget(
+                      title: 'Corn',
+                      icon: Icons.restaurant_menu,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

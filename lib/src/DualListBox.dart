@@ -50,6 +50,9 @@ class DualListBox extends StatelessWidget {
 
   /// Width of the widget
   final double? widgetWidth;
+
+  /// [borderRadius] will be used in all widgets.
+  final double borderRadius;
   const DualListBox({
     Key? key,
     this.title,
@@ -65,6 +68,7 @@ class DualListBox extends StatelessWidget {
     this.onChange,
     this.listHeight = 350,
     this.widgetWidth,
+    this.borderRadius = 20,
   }) : super(key: key);
 
   @override
@@ -111,21 +115,28 @@ class DualListBox extends StatelessWidget {
       width: widgetWidth,
       child: Row(
         children: [
-          Expanded(child: _listWidget(consumer.unAssignedList)),
-          Expanded(child: _listWidget(consumer.assignedList)),
+          Expanded(child: _listWidget(consumer.unAssignedList, context)),
+          Expanded(child: _listWidget(consumer.assignedList, context)),
         ],
       ),
     );
   }
 
-  Widget _listWidget(List<DualListBoxItem> list) {
+  Widget _listWidget(List<DualListBoxItem> list, BuildContext context) {
     List<Widget> listWigets = [];
     for (var i = 0; i < list.length; i++) {
       listWigets.add(list[i].widget ?? Text(list[i].title ?? ' '));
     }
-    return ListView(
-      shrinkWrap: true,
-      children: listWigets,
+    return Container(
+      margin: EdgeInsets.only(right: 2, left: 2),
+      padding: EdgeInsets.only(right: 16, left: 16, top: 16, bottom: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(borderRadius),
+        border: Border.all(color: Theme.of(context).dividerColor),
+      ),
+      child: ListView(
+        children: listWigets,
+      ),
     );
   }
 }
