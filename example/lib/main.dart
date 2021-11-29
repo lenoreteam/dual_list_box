@@ -54,47 +54,82 @@ class _MyHomePageState extends State<MyHomePage> {
                 items: [
                   DualListBoxItem(
                     title: 'Apple',
-                    isSelected: false,
+                    isAssigned: true,
                     type: 'fruit',
                     widget: const DualListBoxItemWidget(
                       title: 'Apple',
                       icon: Icons.restaurant,
+                    ),
+                    selectedWidget: DualListBoxItemWidget(
+                      title: 'Apple',
+                      icon: Icons.restaurant,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      textStyle: Theme.of(context).textTheme.button!.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.w700),
                     ),
                   ),
                   DualListBoxItem(
                     title: 'Orange',
-                    isSelected: false,
+                    isAssigned: false,
                     type: 'fruit',
                     widget: const DualListBoxItemWidget(
-                      title: 'Apple',
+                      title: 'Orange',
                       icon: Icons.restaurant,
+                    ),
+                    selectedWidget: DualListBoxItemWidget(
+                      title: 'Orange',
+                      icon: Icons.restaurant,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      textStyle: Theme.of(context).textTheme.button!.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.w700),
                     ),
                   ),
                   DualListBoxItem(
                     title: 'Banana',
-                    isSelected: true,
+                    isAssigned: false,
                     type: 'fruit',
                     widget: const DualListBoxItemWidget(
-                      title: 'Apple',
+                      title: 'Banana',
                       icon: Icons.restaurant,
+                    ),
+                    selectedWidget: DualListBoxItemWidget(
+                      title: 'Banana',
+                      icon: Icons.restaurant,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      textStyle: Theme.of(context).textTheme.button!.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.w700),
                     ),
                   ),
                   DualListBoxItem(
                     title: 'Carrot',
-                    isSelected: false,
+                    isAssigned: false,
                     type: 'vegetable',
                     widget: const DualListBoxItemWidget(
                       title: 'Carrot',
                       icon: Icons.restaurant_menu,
                     ),
+                    selectedWidget: DualListBoxItemWidget(
+                      title: 'Carrot',
+                      icon: Icons.restaurant_menu,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      textStyle: Theme.of(context).textTheme.button!.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.w700),
+                    ),
                   ),
                   DualListBoxItem(
                     title: 'Corn',
-                    isSelected: true,
+                    isAssigned: true,
                     type: 'vegetable',
                     widget: const DualListBoxItemWidget(
                       title: 'Corn',
                       icon: Icons.restaurant_menu,
+                    ),
+                    selectedWidget: DualListBoxItemWidget(
+                      title: 'Corn',
+                      icon: Icons.restaurant_menu,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      textStyle: Theme.of(context).textTheme.button!.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.w700),
                     ),
                   ),
                 ],

@@ -16,14 +16,40 @@ class DualListBoxViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  List<bool> _selectedAssignedItems = [];
+  List<bool> get selectedAssignedItems => _selectedAssignedItems;
+  set selectedAssignedItems(List<bool> value) {
+    _selectedAssignedItems = value;
+    notifyListeners();
+  }
+
+  toggleSelectedAssignedItemByIndex(int index) {
+    _selectedAssignedItems[index] = !_selectedAssignedItems[index];
+    notifyListeners();
+  }
+
+  List<bool> _selectedUnAssignedItems = [];
+  List<bool> get selectedUnAssignedItems => _selectedUnAssignedItems;
+  set selectedUnAssignedItems(List<bool> value) {
+    _selectedUnAssignedItems = value;
+    notifyListeners();
+  }
+
+  toggleSelectedUnAssignedItemByIndex(int index) {
+    _selectedUnAssignedItems[index] = !_selectedUnAssignedItems[index];
+    notifyListeners();
+  }
+
   seperateLists(List<DualListBoxItem> allList) {
     _assignedList = [];
     _unAssignedList = [];
     for (var i = 0; i < allList.length; i++) {
-      if (allList[i].isSelected ?? false) {
+      if (allList[i].isAssigned ?? false) {
         _assignedList.add(allList[i]);
+        _selectedAssignedItems.add(false);
       } else {
         _unAssignedList.add(allList[i]);
+        _selectedUnAssignedItems.add(false);
       }
     }
   }

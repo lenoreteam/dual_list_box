@@ -1,3 +1,4 @@
+import 'package:dual_list_box/dual_list_box.dart';
 import 'package:dual_list_box/src/DualListBoxItem.dart';
 import 'package:dual_list_box/src/DualListBoxViewModel.dart';
 import 'package:flutter/material.dart';
@@ -115,27 +116,73 @@ class DualListBox extends StatelessWidget {
       width: widgetWidth,
       child: Row(
         children: [
-          Expanded(child: _listWidget(consumer.unAssignedList, context)),
-          Expanded(child: _listWidget(consumer.assignedList, context)),
+          Expanded(child: _listWidget(consumer, context, false)),
+          Expanded(child: _listWidget(consumer, context, true)),
         ],
       ),
     );
   }
 
-  Widget _listWidget(List<DualListBoxItem> list, BuildContext context) {
-    List<Widget> listWigets = [];
-    for (var i = 0; i < list.length; i++) {
-      listWigets.add(list[i].widget ?? Text(list[i].title ?? ' '));
+  Widget _listWidget(
+    DualListBoxViewModel consumer,
+    BuildContext context,
+    bool isAssignedList,
+  ) {
+    List<DualListBoxItem> list = consumer.unAssignedList;
+    List<bool> selectedItems = consumer.selectedUnAssignedItems;
+    if (isAssignedList) {
+      list = consumer.assignedList;
+      selectedItems = consumer.selectedAssignedItems;
     }
     return Container(
-      margin: EdgeInsets.only(right: 2, left: 2),
-      padding: EdgeInsets.only(right: 16, left: 16, top: 16, bottom: 16),
+      margin: EdgeInsets.only(right: 4, left: 4),
+      padding: EdgeInsets.only(
+          right: isAssignedList ? 16 : 64,
+          left: isAssignedList ? 64 : 16,
+          top: 16,
+          bottom: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(color: Theme.of(context).dividerColor),
+        // border: Border.all(color: Theme.of(context).dividerColor),
+        color: Colors.transparent,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).shadowColor.withOpacity(0.1),
+          ),
+          BoxShadow(
+            color: Theme.of(context).cardColor,
+            spreadRadius: -1.0,
+            blurRadius: 5.0,
+          ),
+        ],
       ),
-      child: ListView(
-        children: listWigets,
+      child: ListView.builder(
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          Widget? widget;
+          if (selectedItems[index]) {
+            print('${list[index].title} is selected');
+            widget = list[index].selectedWidget ??
+                DualListBoxItemWidget(
+                  title: list[index].title ?? ' ',
+                  backgroundColor: Theme.of(context).primaryColor,
+                );
+          } else {
+            print('${list[index].title} is not selected');
+            widget = list[index].widget ??
+                DualListBoxItemWidget(title: list[index].title ?? ' ');
+          }
+          return InkWell(
+            onTap: () {
+              if (isAssignedList) {
+                consumer.toggleSelectedAssignedItemByIndex(index);
+              } else {
+                consumer.toggleSelectedUnAssignedItemByIndex(index);
+              }
+            },
+            child: widget,
+          );
+        },
       ),
     );
   }
