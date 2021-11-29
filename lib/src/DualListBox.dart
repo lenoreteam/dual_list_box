@@ -32,19 +32,20 @@ class DualListBox extends StatelessWidget {
   final bool isLoading;
 
   /// Gets called when user assigns a new item to assigned list. Return the assigned [item].
-  final Function(dynamic item)? onAssign;
+  final Function(List<DualListBoxItem> item)? onAssign;
 
   /// Gets called when user assigns all items to assigned list. Return the [assignedItems].
   final Function(List<DualListBoxItem> assignedItems)? onAssignAll;
 
   /// Gets called when user removes an item from assigned list. Return the removed [item].
-  final Function(dynamic item)? onRemove;
+  final Function(List<DualListBoxItem> item)? onRemove;
 
   /// Gets called when user removes all the items from assigned list. Return the [removedItems].
   final Function(List<DualListBoxItem> removedItems)? onRemoveAll;
 
   /// Gets called whenever a change happens. It returns all the [items].
-  final Function(List<DualListBoxItem> items)? onChange;
+  final Function(List<DualListBoxItem> assignedItems,
+      List<DualListBoxItem> removedItems)? onChange;
 
   /// Height of the widget
   final double listHeight;
@@ -103,7 +104,113 @@ class DualListBox extends StatelessWidget {
           // title ? _titleWidget() : Container(),
           // (searchable && Responsive.isMobile(context)) ? _searchWidget(): Container(),
           // filterByType ? _filterWidget() : Container(),
-          _listsWidget(context, consumer),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              _listsWidget(context, consumer),
+              Column(
+                children: [
+                  Material(
+                    color: Colors.white,
+                    elevation: 2,
+                    borderRadius: BorderRadius.circular(borderRadius / 2),
+                    child: InkWell(
+                      onTap: () {
+                        List<DualListBoxItem> assignedItems =
+                            consumer.assignSelectedItems();
+                        if (onAssign != null) {
+                          onAssign!(assignedItems);
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(12),
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Material(
+                    color: Colors.white,
+                    elevation: 2,
+                    borderRadius: BorderRadius.circular(borderRadius / 2),
+                    child: InkWell(
+                      onTap: () {
+                        List<DualListBoxItem> assignedtems =
+                            consumer.assignAllItems();
+                        if (onAssignAll != null) {
+                          onAssignAll!(assignedtems);
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(12),
+                        child: Icon(
+                          Icons.double_arrow_rounded,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Material(
+                    color: Colors.white,
+                    elevation: 2,
+                    borderRadius: BorderRadius.circular(borderRadius / 2),
+                    child: InkWell(
+                      onTap: () {
+                        List<DualListBoxItem> removedItems =
+                            consumer.removeSelectedItems();
+                        if (onRemove != null) {
+                          onRemove!(removedItems);
+                        }
+                        if (onChange != null) {
+                          onChange!(
+                              consumer.assignedList, consumer.unAssignedList);
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(12),
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Material(
+                    color: Colors.white,
+                    elevation: 2,
+                    borderRadius: BorderRadius.circular(borderRadius / 2),
+                    child: InkWell(
+                      onTap: () {
+                        List<DualListBoxItem> removedItems =
+                            consumer.removeAllItems();
+                        if (onRemoveAll != null) {
+                          onRemoveAll!(removedItems);
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(borderRadius / 2),
+                        ),
+                        padding: EdgeInsets.all(12),
+                        child: RotatedBox(
+                          quarterTurns: 2,
+                          child: Icon(
+                            Icons.double_arrow_rounded,
+                            size: 25,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ],
       ),
     );
@@ -161,14 +268,12 @@ class DualListBox extends StatelessWidget {
         itemBuilder: (context, index) {
           Widget? widget;
           if (selectedItems[index]) {
-            print('${list[index].title} is selected');
             widget = list[index].selectedWidget ??
                 DualListBoxItemWidget(
                   title: list[index].title ?? ' ',
                   backgroundColor: Theme.of(context).primaryColor,
                 );
           } else {
-            print('${list[index].title} is not selected');
             widget = list[index].widget ??
                 DualListBoxItemWidget(title: list[index].title ?? ' ');
           }

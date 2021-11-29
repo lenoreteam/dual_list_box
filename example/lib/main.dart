@@ -51,6 +51,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: 'Demo',
                 widgetWidth: 750,
                 backgroundColor: Colors.transparent,
+                onRemove: (removedItems) {
+                  print('removedItems are: $removedItems');
+                },
+                onRemoveAll: (removedItems) {
+                  print('All removedItems are: $removedItems');
+                },
+                onAssign: (assignedItems) {
+                  print('assignedItems are: $assignedItems');
+                },
+                onAssignAll: (assignedItems) {
+                  print('All assignedItems are: $assignedItems');
+                },
                 items: [
                   DualListBoxItem(
                     title: 'Apple',

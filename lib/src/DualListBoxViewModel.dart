@@ -53,4 +53,20 @@ class DualListBoxViewModel with ChangeNotifier {
       }
     }
   }
+
+  List<DualListBoxItem> removeSelectedItems() {
+    return [DualListBoxItem(title: 'test')];
+  }
+
+  List<DualListBoxItem> assignSelectedItems() {
+    return [DualListBoxItem(title: 'test')];
+  }
+
+  List<DualListBoxItem> assignAllItems() {
+    return [DualListBoxItem(title: 'test')];
+  }
+
+  List<DualListBoxItem> removeAllItems() {
+    return [DualListBoxItem(title: 'test')];
+  }
 }
