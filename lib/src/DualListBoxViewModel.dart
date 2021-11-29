@@ -2,6 +2,7 @@ import 'package:dual_list_box/src/DualListBoxItem.dart';
 import 'package:flutter/material.dart';
 
 class DualListBoxViewModel with ChangeNotifier {
+  bool _isFirst = true;
   List<DualListBoxItem> _assignedList = [];
   List<DualListBoxItem> get assignedList => _assignedList;
   set assignedList(List<DualListBoxItem> value) {
@@ -40,33 +41,80 @@ class DualListBoxViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  seperateLists(List<DualListBoxItem> allList) {
-    _assignedList = [];
-    _unAssignedList = [];
-    for (var i = 0; i < allList.length; i++) {
-      if (allList[i].isAssigned ?? false) {
-        _assignedList.add(allList[i]);
-        _selectedAssignedItems.add(false);
-      } else {
-        _unAssignedList.add(allList[i]);
-        _selectedUnAssignedItems.add(false);
+  List<DualListBoxItem> removeSelectedItems() {
+    List<DualListBoxItem> removedItems = [];
+    List<int> removedItemsIndex = [];
+    for (var i = 0; i < _assignedList.length; i++) {
+      if (_selectedAssignedItems[i]) {
+        removedItems.add(_assignedList[i]);
+        removedItemsIndex.add(i);
       }
     }
-  }
 
-  List<DualListBoxItem> removeSelectedItems() {
-    return [DualListBoxItem(title: 'test')];
+    _assignedList.removeWhere((element) => removedItems.contains(element));
+
+    _unAssignedList.addAll(removedItems);
+    setSelectedLists();
+    notifyListeners();
+    return removedItems;
   }
 
   List<DualListBoxItem> assignSelectedItems() {
-    return [DualListBoxItem(title: 'test')];
+    List<DualListBoxItem> assignedItems = [];
+    List<int> assignedItemsIndex = [];
+    for (var i = 0; i < _unAssignedList.length; i++) {
+      if (_selectedUnAssignedItems[i]) {
+        assignedItems.add(_unAssignedList[i]);
+        assignedItemsIndex.add(i);
+      }
+    }
+    _unAssignedList.removeWhere((element) => assignedItems.contains(element));
+
+    _assignedList.addAll(assignedItems);
+    setSelectedLists();
+    notifyListeners();
+    return assignedItems;
   }
 
   List<DualListBoxItem> assignAllItems() {
-    return [DualListBoxItem(title: 'test')];
+    List<DualListBoxItem> assignedItems = [];
+    assignedItems.addAll(_unAssignedList);
+    _assignedList.addAll(_unAssignedList);
+    _unAssignedList.removeWhere((element) => true);
+    setSelectedLists();
+    notifyListeners();
+    return assignedItems;
   }
 
   List<DualListBoxItem> removeAllItems() {
-    return [DualListBoxItem(title: 'test')];
+    List<DualListBoxItem> removedItems = [];
+    removedItems.addAll(_assignedList);
+    _unAssignedList.addAll(_assignedList);
+    _assignedList.removeWhere((element) => true);
+    setSelectedLists();
+    notifyListeners();
+    return removedItems;
+  }
+
+  setLists(List<DualListBoxItem> assignedList,
+      List<DualListBoxItem> unAssignedList) {
+    if (_isFirst) {
+      print('setting lists');
+      _assignedList = assignedList;
+      _unAssignedList = unAssignedList;
+      setSelectedLists();
+      _isFirst = false;
+    }
+  }
+
+  setSelectedLists() {
+    _selectedAssignedItems = [];
+    _selectedUnAssignedItems = [];
+    for (var i = 0; i < _assignedList.length; i++) {
+      _selectedAssignedItems.add(false);
+    }
+    for (var i = 0; i < _unAssignedList.length; i++) {
+      _selectedUnAssignedItems.add(false);
+    }
   }
 }

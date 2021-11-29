@@ -6,9 +6,6 @@ import 'DualListBox.dart';
 import 'DualListBoxItemWidget.dart';
 
 class DualListBoxItem {
-  /// Determines if the item is in assigned list.
-  bool? isAssigned;
-
   /// The type of the item. can be any string.
   ///
   /// When [DualListBox.filterByType] is true, the distinct type wil be available for filtering
@@ -30,7 +27,6 @@ class DualListBoxItem {
     this.type,
     this.title,
     this.widget,
-    this.isAssigned = false,
     this.selectedWidget,
   }) : assert(widget != null || title != null,
             'Both title and widget can not be null');
@@ -43,7 +39,6 @@ class DualListBoxItem {
     Widget? selectedWidget,
   }) {
     return DualListBoxItem(
-      isAssigned: isAssigned ?? this.isAssigned,
       type: type ?? this.type,
       title: title ?? this.title,
       widget: widget ?? this.widget,
@@ -53,7 +48,6 @@ class DualListBoxItem {
 
   Map<String, dynamic> toMap() {
     return {
-      'isAssigned': isAssigned,
       'type': type,
       'title': title,
     };
@@ -61,7 +55,6 @@ class DualListBoxItem {
 
   factory DualListBoxItem.fromMap(Map<String, dynamic> map) {
     return DualListBoxItem(
-      isAssigned: map['isAssigned'] != null ? map['isAssigned'] : null,
       type: map['type'] != null ? map['type'] : null,
       title: map['title'] != null ? map['title'] : null,
     );
@@ -74,7 +67,7 @@ class DualListBoxItem {
 
   @override
   String toString() {
-    return 'DualListBoxItem(isAssigned: $isAssigned, type: $type, title: $title, widget: $widget)';
+    return 'DualListBoxItem(type: $type, title: $title, widget: $widget)';
   }
 
   @override
@@ -82,7 +75,6 @@ class DualListBoxItem {
     if (identical(this, other)) return true;
 
     return other is DualListBoxItem &&
-        other.isAssigned == isAssigned &&
         other.type == type &&
         other.title == title &&
         other.widget == widget &&
@@ -91,8 +83,7 @@ class DualListBoxItem {
 
   @override
   int get hashCode {
-    return isAssigned.hashCode ^
-        type.hashCode ^
+    return type.hashCode ^
         title.hashCode ^
         widget.hashCode ^
         selectedWidget.hashCode;

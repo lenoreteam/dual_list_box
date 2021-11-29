@@ -19,8 +19,11 @@ class DualListBox extends StatelessWidget {
   /// This is the [backgroundColor] of the whole widget.
   final Color backgroundColor;
 
-  /// List of [items] to be shown in the unassigned list. this list should include all the items.
-  final List<DualListBoxItem> items;
+  /// List of [unassignedItems] to be shown in the unassigned list..
+  final List<DualListBoxItem> unassignedItems;
+
+  /// List of [assignedItems] to be shown in the assignedItems list..
+  final List<DualListBoxItem> assignedItems;
 
   /// Determine if the lists can be filtered by their item type.
   final bool filterByType;
@@ -31,17 +34,37 @@ class DualListBox extends StatelessWidget {
   /// If [isLoading] is true, A loading widget will be shown on top of all widgets.
   final bool isLoading;
 
-  /// Gets called when user assigns a new item to assigned list. Return the assigned [item].
-  final Function(List<DualListBoxItem> item)? onAssign;
+  /// Gets called when user assigns a new item to assigned list.
+  ///
+  /// Returns the  newly [newlyAssignedItems] and all of [assignedItems] and all of [unassignedItems].
+  final Function(
+      List<DualListBoxItem> newlyAssignedItems,
+      List<DualListBoxItem> assignedItems,
+      List<DualListBoxItem> unassignedItems)? onAssign;
 
-  /// Gets called when user assigns all items to assigned list. Return the [assignedItems].
-  final Function(List<DualListBoxItem> assignedItems)? onAssignAll;
+  /// Gets called when user assigns all items to assigned list.
+  ///
+  /// Returns the  newly [newlyAssignedItems] and all of [assignedItems] and all of [unassignedItems].
+  final Function(
+      List<DualListBoxItem> newlyAssignedItems,
+      List<DualListBoxItem> assignedItems,
+      List<DualListBoxItem> unassignedItems)? onAssignAll;
 
-  /// Gets called when user removes an item from assigned list. Return the removed [item].
-  final Function(List<DualListBoxItem> item)? onRemove;
+  /// Gets called when user removes an item from assigned list.
+  ///
+  /// Returns the  newly [newlyRemovedItems] and all of [assignedItems] and all of [unassignedItems].
+  final Function(
+      List<DualListBoxItem> newlyRemovedItems,
+      List<DualListBoxItem> assignedItems,
+      List<DualListBoxItem> unassignedItems)? onRemove;
 
-  /// Gets called when user removes all the items from assigned list. Return the [removedItems].
-  final Function(List<DualListBoxItem> removedItems)? onRemoveAll;
+  /// Gets called when user removes all the items from assigned list.
+  ///
+  /// Returns the newly [newlyRemovedItems] and all of [assignedItems] and all of [unassignedItems].
+  final Function(
+      List<DualListBoxItem> newlyRemovedItems,
+      List<DualListBoxItem> assignedItems,
+      List<DualListBoxItem> unassignedItems)? onRemoveAll;
 
   /// Gets called whenever a change happens. It returns all the [items].
   final Function(List<DualListBoxItem> assignedItems,
@@ -59,7 +82,8 @@ class DualListBox extends StatelessWidget {
     Key? key,
     this.title,
     this.backgroundColor = Colors.white,
-    this.items = const [],
+    this.assignedItems = const [],
+    this.unassignedItems = const [],
     this.filterByType = false,
     this.searchable = false,
     this.isLoading = false,
@@ -80,6 +104,7 @@ class DualListBox extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => DualListBoxViewModel()),
       ],
       child: Consumer<DualListBoxViewModel>(builder: (_, consumer, __) {
+        consumer.setLists(assignedItems, unassignedItems);
         return Container(
           child: Responsive.isDesktop(context) || Responsive.isTablet(context)
               ? _buildDesktopWidget(context, consumer)
@@ -108,107 +133,7 @@ class DualListBox extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               _listsWidget(context, consumer),
-              Column(
-                children: [
-                  Material(
-                    color: Colors.white,
-                    elevation: 2,
-                    borderRadius: BorderRadius.circular(borderRadius / 2),
-                    child: InkWell(
-                      onTap: () {
-                        List<DualListBoxItem> assignedItems =
-                            consumer.assignSelectedItems();
-                        if (onAssign != null) {
-                          onAssign!(assignedItems);
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(12),
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 25,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Material(
-                    color: Colors.white,
-                    elevation: 2,
-                    borderRadius: BorderRadius.circular(borderRadius / 2),
-                    child: InkWell(
-                      onTap: () {
-                        List<DualListBoxItem> assignedtems =
-                            consumer.assignAllItems();
-                        if (onAssignAll != null) {
-                          onAssignAll!(assignedtems);
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(12),
-                        child: Icon(
-                          Icons.double_arrow_rounded,
-                          size: 25,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Material(
-                    color: Colors.white,
-                    elevation: 2,
-                    borderRadius: BorderRadius.circular(borderRadius / 2),
-                    child: InkWell(
-                      onTap: () {
-                        List<DualListBoxItem> removedItems =
-                            consumer.removeSelectedItems();
-                        if (onRemove != null) {
-                          onRemove!(removedItems);
-                        }
-                        if (onChange != null) {
-                          onChange!(
-                              consumer.assignedList, consumer.unAssignedList);
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(12),
-                        child: Icon(
-                          Icons.arrow_back_ios_new,
-                          size: 25,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Material(
-                    color: Colors.white,
-                    elevation: 2,
-                    borderRadius: BorderRadius.circular(borderRadius / 2),
-                    child: InkWell(
-                      onTap: () {
-                        List<DualListBoxItem> removedItems =
-                            consumer.removeAllItems();
-                        if (onRemoveAll != null) {
-                          onRemoveAll!(removedItems);
-                        }
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(borderRadius / 2),
-                        ),
-                        padding: EdgeInsets.all(12),
-                        child: RotatedBox(
-                          quarterTurns: 2,
-                          child: Icon(
-                            Icons.double_arrow_rounded,
-                            size: 25,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )
+              _middleButtons(consumer),
             ],
           ),
         ],
@@ -216,8 +141,121 @@ class DualListBox extends StatelessWidget {
     );
   }
 
+  Widget _middleButtons(DualListBoxViewModel consumer) {
+    return Column(
+      children: [
+        Material(
+          color: Colors.white,
+          elevation: 2,
+          borderRadius: BorderRadius.circular(borderRadius / 2),
+          child: InkWell(
+            onTap: () {
+              List<DualListBoxItem> assignedItems =
+                  consumer.assignSelectedItems();
+              if (onAssign != null) {
+                onAssign!(assignedItems, consumer.assignedList,
+                    consumer.unAssignedList);
+              }
+              if (onChange != null) {
+                onChange!(consumer.assignedList, consumer.unAssignedList);
+              }
+            },
+            child: Container(
+              padding: EdgeInsets.all(12),
+              child: Icon(
+                Icons.arrow_forward_ios,
+                size: 25,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        Material(
+          color: Colors.white,
+          elevation: 2,
+          borderRadius: BorderRadius.circular(borderRadius / 2),
+          child: InkWell(
+            onTap: () {
+              List<DualListBoxItem> assignedtems = consumer.assignAllItems();
+              if (onAssignAll != null) {
+                onAssignAll!(assignedtems, consumer.assignedList,
+                    consumer.unAssignedList);
+              }
+              if (onChange != null) {
+                onChange!(consumer.assignedList, consumer.unAssignedList);
+              }
+            },
+            child: Container(
+              padding: EdgeInsets.all(12),
+              child: Icon(
+                Icons.double_arrow_rounded,
+                size: 25,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        Material(
+          color: Colors.white,
+          elevation: 2,
+          borderRadius: BorderRadius.circular(borderRadius / 2),
+          child: InkWell(
+            onTap: () {
+              List<DualListBoxItem> removedItems =
+                  consumer.removeSelectedItems();
+              if (onRemove != null) {
+                onRemove!(removedItems, consumer.assignedList,
+                    consumer.unAssignedList);
+              }
+              if (onChange != null) {
+                onChange!(consumer.assignedList, consumer.unAssignedList);
+              }
+            },
+            child: Container(
+              padding: EdgeInsets.all(12),
+              child: Icon(
+                Icons.arrow_back_ios_new,
+                size: 25,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        Material(
+          color: Colors.white,
+          elevation: 2,
+          borderRadius: BorderRadius.circular(borderRadius / 2),
+          child: InkWell(
+            onTap: () {
+              List<DualListBoxItem> removedItems = consumer.removeAllItems();
+              if (onRemoveAll != null) {
+                onRemoveAll!(removedItems, consumer.assignedList,
+                    consumer.unAssignedList);
+              }
+              if (onChange != null) {
+                onChange!(consumer.assignedList, consumer.unAssignedList);
+              }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(borderRadius / 2),
+              ),
+              padding: EdgeInsets.all(12),
+              child: RotatedBox(
+                quarterTurns: 2,
+                child: Icon(
+                  Icons.double_arrow_rounded,
+                  size: 25,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _listsWidget(BuildContext context, DualListBoxViewModel consumer) {
-    consumer.seperateLists(items);
     return Container(
       height: listHeight,
       width: widgetWidth,

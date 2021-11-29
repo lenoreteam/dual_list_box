@@ -51,22 +51,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: 'Demo',
                 widgetWidth: 750,
                 backgroundColor: Colors.transparent,
-                onRemove: (removedItems) {
-                  print('removedItems are: $removedItems');
+                onRemove: (newlyRemovedItems, assignedList, unAssignedList) {
+                  print('removedItems are: $newlyRemovedItems');
                 },
-                onRemoveAll: (removedItems) {
-                  print('All removedItems are: $removedItems');
+                onRemoveAll: (newlyRemovedItems, assignedList, unAssignedList) {
+                  print('All removedItems are: $newlyRemovedItems');
                 },
-                onAssign: (assignedItems) {
-                  print('assignedItems are: $assignedItems');
+                onAssign: (newlyAssignedItems, assignedList, unAssignedList) {
+                  print('assignedItems are: $newlyAssignedItems');
                 },
-                onAssignAll: (assignedItems) {
-                  print('All assignedItems are: $assignedItems');
+                onAssignAll:
+                    (newlyAssignedItems, assignedList, unAssignedList) {
+                  print('All assignedItems are: $newlyAssignedItems');
                 },
-                items: [
+                assignedItems: [
                   DualListBoxItem(
                     title: 'Apple',
-                    isAssigned: true,
                     type: 'fruit',
                     widget: const DualListBoxItemWidget(
                       title: 'Apple',
@@ -82,7 +82,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   DualListBoxItem(
                     title: 'Orange',
-                    isAssigned: false,
                     type: 'fruit',
                     widget: const DualListBoxItemWidget(
                       title: 'Orange',
@@ -97,8 +96,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   DualListBoxItem(
+                    title: 'Corn',
+                    type: 'vegetable',
+                    widget: const DualListBoxItemWidget(
+                      title: 'Corn',
+                      icon: Icons.restaurant_menu,
+                    ),
+                    selectedWidget: DualListBoxItemWidget(
+                      title: 'Corn',
+                      icon: Icons.restaurant_menu,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      textStyle: Theme.of(context).textTheme.button!.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ],
+                unassignedItems: [
+                  DualListBoxItem(
                     title: 'Banana',
-                    isAssigned: false,
                     type: 'fruit',
                     widget: const DualListBoxItemWidget(
                       title: 'Banana',
@@ -114,7 +129,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   DualListBoxItem(
                     title: 'Carrot',
-                    isAssigned: false,
                     type: 'vegetable',
                     widget: const DualListBoxItemWidget(
                       title: 'Carrot',
@@ -122,22 +136,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     selectedWidget: DualListBoxItemWidget(
                       title: 'Carrot',
-                      icon: Icons.restaurant_menu,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      textStyle: Theme.of(context).textTheme.button!.copyWith(
-                          color: Colors.white, fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                  DualListBoxItem(
-                    title: 'Corn',
-                    isAssigned: true,
-                    type: 'vegetable',
-                    widget: const DualListBoxItemWidget(
-                      title: 'Corn',
-                      icon: Icons.restaurant_menu,
-                    ),
-                    selectedWidget: DualListBoxItemWidget(
-                      title: 'Corn',
                       icon: Icons.restaurant_menu,
                       backgroundColor: Theme.of(context).primaryColor,
                       textStyle: Theme.of(context).textTheme.button!.copyWith(
