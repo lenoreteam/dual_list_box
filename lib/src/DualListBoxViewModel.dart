@@ -51,13 +51,11 @@ class DualListBoxViewModel with ChangeNotifier {
       Color backgroundColor, Animation<double> animation,
       {item}) {
     if (item != null) {
-      print('returning item');
       return SizeTransition(sizeFactor: animation, child: item);
     }
     List<DualListBoxItem> list = _unAssignedList;
     List<bool> selectedItems = _selectedUnAssignedItems;
     if (isAssignedList) {
-      print('it is isAssignedList');
       list = _assignedList;
       selectedItems = _selectedAssignedItems;
     }
@@ -95,7 +93,6 @@ class DualListBoxViewModel with ChangeNotifier {
     }
 
     for (var i = 0; i < removedItems.length; i++) {
-      print('removedItemsIndex[i] ${removedItemsIndex[i]}');
       int index =
           _assignedList.indexWhere((element) => element == removedItems[i]);
       _assignedList.removeWhere((element) => element == removedItems[i]);
@@ -172,7 +169,6 @@ class DualListBoxViewModel with ChangeNotifier {
     }
 
     for (var i = 0; i < removedItems.length; i++) {
-      print('removedItemsIndex[i] ${removedItemsIndex[i]}');
       int index =
           _assignedList.indexWhere((element) => element == removedItems[i]);
       _assignedList.removeWhere((element) => element == removedItems[i]);
@@ -193,7 +189,6 @@ class DualListBoxViewModel with ChangeNotifier {
   setLists(List<DualListBoxItem> assignedList,
       List<DualListBoxItem> unAssignedList) {
     if (_isFirst) {
-      print('setting lists');
       _assignedList = assignedList;
       _unAssignedList = unAssignedList;
       setSelectedLists();

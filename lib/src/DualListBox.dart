@@ -16,6 +16,12 @@ class DualListBox extends StatelessWidget {
   /// The [title] that will be shown on top of the widget.
   final String? title;
 
+  /// The [assignTitle] that will be shown on top of the assigned list.
+  final String? assignTitle;
+
+  /// The [unAssignTitle] that will be shown on top of the unAssignTitle list.
+  final String? unAssignTitle;
+
   /// This is the [backgroundColor] of the whole widget.
   final Color backgroundColor;
 
@@ -81,6 +87,8 @@ class DualListBox extends StatelessWidget {
   const DualListBox({
     Key? key,
     this.title,
+    this.assignTitle,
+    this.unAssignTitle,
     this.backgroundColor = Colors.white,
     this.assignedItems = const [],
     this.unassignedItems = const [],
@@ -124,9 +132,15 @@ class DualListBox extends StatelessWidget {
   _buildDesktopWidget(BuildContext context, DualListBoxViewModel consumer) {
     return Container(
       decoration: BoxDecoration(color: backgroundColor),
+      width: widgetWidth,
       child: Column(
         children: [
-          // title ? _titleWidget() : Container(),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 16),
+            child: title != null ? _titleWidget(context) : Container(),
+          ),
+
           // (searchable && Responsive.isMobile(context)) ? _searchWidget(): Container(),
           // filterByType ? _filterWidget() : Container(),
           Stack(
@@ -258,15 +272,46 @@ class DualListBox extends StatelessWidget {
   }
 
   Widget _listsWidget(BuildContext context, DualListBoxViewModel consumer) {
-    return Container(
-      height: listHeight,
-      width: widgetWidth,
-      child: Row(
-        children: [
-          Expanded(child: _listWidget(consumer, context, false)),
-          Expanded(child: _listWidget(consumer, context, true)),
-        ],
-      ),
+    return Column(
+      children: [
+        (unAssignTitle != null || assignTitle != null)
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 8, top: 8),
+                      child: Text(
+                        assignTitle ?? '',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 8, top: 8),
+                      child: Text(
+                        unAssignTitle ?? '',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : Container(),
+        Container(
+          height: listHeight,
+          width: widgetWidth,
+          child: Row(
+            children: [
+              Expanded(child: _listWidget(consumer, context, false)),
+              Expanded(child: _listWidget(consumer, context, true)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -312,6 +357,20 @@ class DualListBox extends StatelessWidget {
           return consumer.buildAnimatedListItem(
               isAssignedList, index, backgroundColor, animation);
         },
+      ),
+    );
+  }
+
+  Widget _titleWidget(BuildContext context) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            title ?? '',
+            style: Theme.of(context).textTheme.headline5,
+          ),
+        ],
       ),
     );
   }

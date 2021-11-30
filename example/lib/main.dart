@@ -46,9 +46,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Padding(
               padding: const EdgeInsets.only(
-                  right: 16, left: 16, top: 16, bottom: 16),
+                  right: 16, left: 16, top: 8, bottom: 16),
               child: DualListBox(
-                title: 'Demo',
+                title: 'Assign User To Group',
+                assignTitle: 'UnAssigned Users',
+                unAssignTitle: 'Assigned Users',
                 widgetWidth: 750,
                 backgroundColor: Colors.transparent,
                 onRemove: (newlyRemovedItems, assignedList, unAssignedList) {
