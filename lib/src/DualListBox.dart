@@ -133,7 +133,7 @@ class DualListBox extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               _listsWidget(context, consumer),
-              _middleButtons(consumer),
+              _middleButtons(context, consumer),
             ],
           ),
         ],
@@ -141,7 +141,7 @@ class DualListBox extends StatelessWidget {
     );
   }
 
-  Widget _middleButtons(DualListBoxViewModel consumer) {
+  Widget _middleButtons(BuildContext context, DualListBoxViewModel consumer) {
     return Column(
       children: [
         Material(
@@ -151,7 +151,7 @@ class DualListBox extends StatelessWidget {
           child: InkWell(
             onTap: () {
               List<DualListBoxItem> assignedItems =
-                  consumer.assignSelectedItems();
+                  consumer.assignSelectedItems(Theme.of(context).primaryColor);
               if (onAssign != null) {
                 onAssign!(assignedItems, consumer.assignedList,
                     consumer.unAssignedList);
@@ -176,7 +176,8 @@ class DualListBox extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius / 2),
           child: InkWell(
             onTap: () {
-              List<DualListBoxItem> assignedtems = consumer.assignAllItems();
+              List<DualListBoxItem> assignedtems =
+                  consumer.assignAllItems(Theme.of(context).primaryColor);
               if (onAssignAll != null) {
                 onAssignAll!(assignedtems, consumer.assignedList,
                     consumer.unAssignedList);
@@ -202,7 +203,7 @@ class DualListBox extends StatelessWidget {
           child: InkWell(
             onTap: () {
               List<DualListBoxItem> removedItems =
-                  consumer.removeSelectedItems();
+                  consumer.removeSelectedItems(Theme.of(context).primaryColor);
               if (onRemove != null) {
                 onRemove!(removedItems, consumer.assignedList,
                     consumer.unAssignedList);
@@ -227,7 +228,8 @@ class DualListBox extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius / 2),
           child: InkWell(
             onTap: () {
-              List<DualListBoxItem> removedItems = consumer.removeAllItems();
+              List<DualListBoxItem> removedItems =
+                  consumer.removeAllItems(Theme.of(context).primaryColor);
               if (onRemoveAll != null) {
                 onRemoveAll!(removedItems, consumer.assignedList,
                     consumer.unAssignedList);
@@ -301,30 +303,14 @@ class DualListBox extends StatelessWidget {
           ),
         ],
       ),
-      child: ListView.builder(
-        itemCount: list.length,
-        itemBuilder: (context, index) {
-          Widget? widget;
-          if (selectedItems[index]) {
-            widget = list[index].selectedWidget ??
-                DualListBoxItemWidget(
-                  title: list[index].title ?? ' ',
-                  backgroundColor: Theme.of(context).primaryColor,
-                );
-          } else {
-            widget = list[index].widget ??
-                DualListBoxItemWidget(title: list[index].title ?? ' ');
-          }
-          return InkWell(
-            onTap: () {
-              if (isAssignedList) {
-                consumer.toggleSelectedAssignedItemByIndex(index);
-              } else {
-                consumer.toggleSelectedUnAssignedItemByIndex(index);
-              }
-            },
-            child: widget,
-          );
+      child: AnimatedList(
+        key: isAssignedList
+            ? consumer.animatedAssignedListKey
+            : consumer.animatedUnAssignedListKey,
+        initialItemCount: list.length,
+        itemBuilder: (context, index, animation) {
+          return consumer.buildAnimatedListItem(
+              isAssignedList, index, backgroundColor, animation);
         },
       ),
     );
