@@ -48,9 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.only(
                   right: 16, left: 16, top: 8, bottom: 16),
               child: DualListBox(
-                title: 'Assign User To Group',
-                assignTitle: 'UnAssigned Users',
-                unAssignTitle: 'Assigned Users',
+                title: 'Assign User To Developers Group',
+                assignTitle: 'Unassigned Users/Groups',
+                unAssignTitle: 'Assigned Users/Groups',
                 widgetWidth: 750,
                 backgroundColor: Colors.transparent,
                 onRemove: (newlyRemovedItems, assignedList, unAssignedList) {
@@ -68,14 +68,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 assignedItems: [
                   DualListBoxItem(
-                    title: 'Apple',
-                    type: 'fruit',
+                    title: 'John',
+                    type: 'user',
                     widget: const DualListBoxItemWidget(
-                      title: 'Apple',
+                      title: 'John',
                       icon: Icons.restaurant,
                     ),
                     selectedWidget: DualListBoxItemWidget(
-                      title: 'Apple',
+                      title: 'John',
                       icon: Icons.restaurant,
                       backgroundColor: Theme.of(context).primaryColor,
                       textStyle: Theme.of(context).textTheme.button!.copyWith(
@@ -83,14 +83,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   DualListBoxItem(
-                    title: 'Orange',
-                    type: 'fruit',
+                    title: 'Mario',
+                    type: 'user',
                     widget: const DualListBoxItemWidget(
-                      title: 'Orange',
+                      title: 'Mario',
                       icon: Icons.restaurant,
                     ),
                     selectedWidget: DualListBoxItemWidget(
-                      title: 'Orange',
+                      title: 'Mario',
                       icon: Icons.restaurant,
                       backgroundColor: Theme.of(context).primaryColor,
                       textStyle: Theme.of(context).textTheme.button!.copyWith(
@@ -98,14 +98,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   DualListBoxItem(
-                    title: 'Corn',
-                    type: 'vegetable',
+                    title: 'Yosi',
+                    type: 'user',
                     widget: const DualListBoxItemWidget(
-                      title: 'Corn',
+                      title: 'Yoshi',
                       icon: Icons.restaurant_menu,
                     ),
                     selectedWidget: DualListBoxItemWidget(
-                      title: 'Corn',
+                      title: 'Yoshi',
                       icon: Icons.restaurant_menu,
                       backgroundColor: Theme.of(context).primaryColor,
                       textStyle: Theme.of(context).textTheme.button!.copyWith(
@@ -115,14 +115,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
                 unassignedItems: [
                   DualListBoxItem(
-                    title: 'Banana',
-                    type: 'fruit',
+                    title: 'Java Devs',
+                    type: 'group',
                     widget: const DualListBoxItemWidget(
-                      title: 'Banana',
+                      title: 'Java Devs',
                       icon: Icons.restaurant,
                     ),
                     selectedWidget: DualListBoxItemWidget(
-                      title: 'Banana',
+                      title: 'Java Devs',
                       icon: Icons.restaurant,
                       backgroundColor: Theme.of(context).primaryColor,
                       textStyle: Theme.of(context).textTheme.button!.copyWith(
@@ -130,14 +130,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   DualListBoxItem(
-                    title: 'Carrot',
-                    type: 'vegetable',
+                    title: 'Flutter Devs',
+                    type: 'group',
                     widget: const DualListBoxItemWidget(
-                      title: 'Carrot',
+                      title: 'Flutter Devs',
                       icon: Icons.restaurant_menu,
                     ),
                     selectedWidget: DualListBoxItemWidget(
-                      title: 'Carrot',
+                      title: 'Flutter Devs',
                       icon: Icons.restaurant_menu,
                       backgroundColor: Theme.of(context).primaryColor,
                       textStyle: Theme.of(context).textTheme.button!.copyWith(
