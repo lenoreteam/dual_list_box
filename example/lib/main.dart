@@ -72,11 +72,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     type: 'user',
                     widget: const DualListBoxItemWidget(
                       title: 'John',
-                      icon: Icons.restaurant,
+                      icon: Icons.person,
                     ),
                     selectedWidget: DualListBoxItemWidget(
                       title: 'John',
-                      icon: Icons.restaurant,
+                      icon: Icons.person,
                       backgroundColor: Theme.of(context).primaryColor,
                       textStyle: Theme.of(context).textTheme.button!.copyWith(
                           color: Colors.white, fontWeight: FontWeight.w700),
@@ -87,26 +87,26 @@ class _MyHomePageState extends State<MyHomePage> {
                     type: 'user',
                     widget: const DualListBoxItemWidget(
                       title: 'Mario',
-                      icon: Icons.restaurant,
+                      icon: Icons.person,
                     ),
                     selectedWidget: DualListBoxItemWidget(
                       title: 'Mario',
-                      icon: Icons.restaurant,
+                      icon: Icons.person,
                       backgroundColor: Theme.of(context).primaryColor,
                       textStyle: Theme.of(context).textTheme.button!.copyWith(
                           color: Colors.white, fontWeight: FontWeight.w700),
                     ),
                   ),
                   DualListBoxItem(
-                    title: 'Yosi',
-                    type: 'user',
+                    title: 'Java Devs',
+                    type: 'group',
                     widget: const DualListBoxItemWidget(
-                      title: 'Yoshi',
-                      icon: Icons.restaurant_menu,
+                      title: 'Java Devs',
+                      icon: Icons.group,
                     ),
                     selectedWidget: DualListBoxItemWidget(
-                      title: 'Yoshi',
-                      icon: Icons.restaurant_menu,
+                      title: 'Java Devs',
+                      icon: Icons.group,
                       backgroundColor: Theme.of(context).primaryColor,
                       textStyle: Theme.of(context).textTheme.button!.copyWith(
                           color: Colors.white, fontWeight: FontWeight.w700),
@@ -115,30 +115,30 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
                 unassignedItems: [
                   DualListBoxItem(
-                    title: 'Java Devs',
-                    type: 'group',
+                    title: 'Yoshi',
+                    type: 'user',
                     widget: const DualListBoxItemWidget(
-                      title: 'Java Devs',
-                      icon: Icons.restaurant,
+                      title: 'Yoshi',
+                      icon: Icons.person,
                     ),
                     selectedWidget: DualListBoxItemWidget(
-                      title: 'Java Devs',
-                      icon: Icons.restaurant,
+                      title: 'Yoshi',
+                      icon: Icons.person,
                       backgroundColor: Theme.of(context).primaryColor,
                       textStyle: Theme.of(context).textTheme.button!.copyWith(
                           color: Colors.white, fontWeight: FontWeight.w700),
                     ),
                   ),
                   DualListBoxItem(
-                    title: 'Flutter Devs',
+                    title: 'Maintenance',
                     type: 'group',
                     widget: const DualListBoxItemWidget(
-                      title: 'Flutter Devs',
-                      icon: Icons.restaurant_menu,
+                      title: 'Maintenance',
+                      icon: Icons.group,
                     ),
                     selectedWidget: DualListBoxItemWidget(
-                      title: 'Flutter Devs',
-                      icon: Icons.restaurant_menu,
+                      title: 'Maintenance',
+                      icon: Icons.group,
                       backgroundColor: Theme.of(context).primaryColor,
                       textStyle: Theme.of(context).textTheme.button!.copyWith(
                           color: Colors.white, fontWeight: FontWeight.w700),
