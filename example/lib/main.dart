@@ -53,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 unAssignTitle: 'Assigned Users/Groups',
                 widgetWidth: 750,
                 backgroundColor: Colors.transparent,
+                filterByType: true,
                 onRemove: (newlyRemovedItems, assignedList, unAssignedList) {
                   print('removedItems are: $newlyRemovedItems');
                 },

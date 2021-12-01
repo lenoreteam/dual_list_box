@@ -1,6 +1,7 @@
 import 'package:dual_list_box/src/DualListBoxItem.dart';
 import 'package:flutter/material.dart';
 
+import 'DualListBoxGroupItem.dart';
 import 'DualListBoxItemWidget.dart';
 
 class DualListBoxViewModel with ChangeNotifier {
@@ -20,6 +21,13 @@ class DualListBoxViewModel with ChangeNotifier {
   List<DualListBoxItem> get unAssignedList => _unAssignedList;
   set unAssignedList(List<DualListBoxItem> value) {
     _unAssignedList = value;
+    notifyListeners();
+  }
+
+  List<DualListBoxGroupItem> _groups = [];
+  List<DualListBoxGroupItem> get groups => _groups;
+  set groups(List<DualListBoxGroupItem> value) {
+    _groups = value;
     notifyListeners();
   }
 
@@ -206,4 +214,6 @@ class DualListBoxViewModel with ChangeNotifier {
       _selectedUnAssignedItems.add(false);
     }
   }
+
+  void setGroupsList(BuildContext context) {}
 }

@@ -142,7 +142,7 @@ class DualListBox extends StatelessWidget {
           ),
 
           // (searchable && Responsive.isMobile(context)) ? _searchWidget(): Container(),
-          // filterByType ? _filterWidget() : Container(),
+          filterByType ? _filterWidget(context, consumer) : Container(),
           Stack(
             alignment: Alignment.center,
             children: [
@@ -373,5 +373,10 @@ class DualListBox extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _filterWidget(BuildContext context, DualListBoxViewModel consumer) {
+    consumer.setGroupsList(context);
+    return Container();
   }
 }
