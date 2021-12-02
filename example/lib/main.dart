@@ -13,9 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Dual List Box',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-      ),
+      theme: ThemeData(backgroundColor: Colors.white),
       home: const MyHomePage(title: 'Dual List Box'),
     );
   }
@@ -70,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 assignedItems: [
                   DualListBoxItem(
                     title: 'John',
-                    type: 'user',
+                    type: 'useruseruseruseruseruseruseruseruseruseruser',
                     widget: const DualListBoxItemWidget(
                       title: 'John',
                       icon: Icons.person,
@@ -85,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   DualListBoxItem(
                     title: 'Mario',
-                    type: 'user',
+                    type: 'useruseruseruser',
                     widget: const DualListBoxItemWidget(
                       title: 'Mario',
                       icon: Icons.person,
@@ -100,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   DualListBoxItem(
                     title: 'Java Devs',
-                    type: 'group',
+                    type: 'groupgroupgroupgroupgroupgroupgroupgroupgroup',
                     widget: const DualListBoxItemWidget(
                       title: 'Java Devs',
                       icon: Icons.group,

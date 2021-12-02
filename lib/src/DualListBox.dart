@@ -1,5 +1,6 @@
 import 'package:dual_list_box/dual_list_box.dart';
 import 'package:dual_list_box/src/DualListBoxItem.dart';
+import 'package:dual_list_box/src/DualListBoxTypeWidget.dart';
 import 'package:dual_list_box/src/DualListBoxViewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:lenore_ui/lenore_ui.dart';
@@ -376,7 +377,16 @@ class DualListBox extends StatelessWidget {
   }
 
   Widget _filterWidget(BuildContext context, DualListBoxViewModel consumer) {
-    consumer.setGroupsList(context);
-    return Container();
+    consumer.setTypesList(context);
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Wrap(
+        runSpacing: 2,
+        spacing: 4,
+        alignment: WrapAlignment.start,
+        children: consumer.buildTypeWidgets(context),
+      ),
+    );
   }
 }

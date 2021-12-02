@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'DualListBoxTypeItem.dart';
 import 'DualListBoxItemWidget.dart';
+import 'DualListBoxTypeWidget.dart';
 
 class DualListBoxViewModel with ChangeNotifier {
   final GlobalKey<AnimatedListState> animatedAssignedListKey =
@@ -25,8 +26,8 @@ class DualListBoxViewModel with ChangeNotifier {
   }
 
   List<DualListBoxTypeItem> _types = [];
-  List<DualListBoxTypeItem> get groups => _types;
-  set groups(List<DualListBoxTypeItem> value) {
+  List<DualListBoxTypeItem> get types => _types;
+  set types(List<DualListBoxTypeItem> value) {
     _types = value;
     notifyListeners();
   }
@@ -215,7 +216,7 @@ class DualListBoxViewModel with ChangeNotifier {
     }
   }
 
-  void setGroupsList(BuildContext context) {
+  void setTypesList(BuildContext context) {
     List<DualListBoxItem> allList = [];
     allList.addAll(_assignedList);
     allList.addAll(_unAssignedList);
@@ -235,5 +236,35 @@ class DualListBoxViewModel with ChangeNotifier {
       }
     }
     print('types = $_types');
+  }
+
+  Iterable<E> mapIndexed<E, T>(
+      Iterable<T> items, E Function(int index, T item) f) sync* {
+    var index = 0;
+
+    for (final item in items) {
+      yield f(index, item);
+      index = index + 1;
+    }
+  }
+
+  List<Widget> buildTypeWidgets(BuildContext context) {
+    List<Widget> widgets = [];
+
+    for (var i = 0; i < _types.length; i++) {
+      widgets.add(
+        InkWell(
+          onTap: () {
+            _types[i].isSelected = !_types[i].isSelected;
+            notifyListeners();
+          },
+          child: DualListBoxTypeWidget(
+            name: _types[i].name,
+            isSelected: _types[i].isSelected,
+          ),
+        ),
+      );
+    }
+    return widgets;
   }
 }
