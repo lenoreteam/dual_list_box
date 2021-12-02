@@ -1,7 +1,7 @@
 import 'package:dual_list_box/src/DualListBoxItem.dart';
 import 'package:flutter/material.dart';
 
-import 'DualListBoxGroupItem.dart';
+import 'DualListBoxTypeItem.dart';
 import 'DualListBoxItemWidget.dart';
 
 class DualListBoxViewModel with ChangeNotifier {
@@ -24,10 +24,10 @@ class DualListBoxViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  List<DualListBoxGroupItem> _groups = [];
-  List<DualListBoxGroupItem> get groups => _groups;
-  set groups(List<DualListBoxGroupItem> value) {
-    _groups = value;
+  List<DualListBoxTypeItem> _types = [];
+  List<DualListBoxTypeItem> get groups => _types;
+  set groups(List<DualListBoxTypeItem> value) {
+    _types = value;
     notifyListeners();
   }
 
@@ -215,5 +215,25 @@ class DualListBoxViewModel with ChangeNotifier {
     }
   }
 
-  void setGroupsList(BuildContext context) {}
+  void setGroupsList(BuildContext context) {
+    List<DualListBoxItem> allList = [];
+    allList.addAll(_assignedList);
+    allList.addAll(_unAssignedList);
+    for (var i = 0; i < allList.length; i++) {
+      bool _containsType = false;
+      if (allList[i].type != null) {
+        for (var type in _types) {
+          if (type.name == allList[i].type) {
+            _containsType = true;
+            break;
+          }
+        }
+        if (!_containsType) {
+          _types.add(DualListBoxTypeItem(
+              name: allList[i].type ?? '', isSelected: false));
+        }
+      }
+    }
+    print('types = $_types');
+  }
 }
