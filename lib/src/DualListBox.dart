@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dual_list_box/dual_list_box.dart';
 import 'package:dual_list_box/src/DualListBoxItem.dart';
 import 'package:dual_list_box/src/DualListBoxTypeWidget.dart';
@@ -80,8 +81,11 @@ class DualListBox extends StatelessWidget {
   final Function(List<DualListBoxItem> assignedItems,
       List<DualListBoxItem> removedItems)? onChange;
 
-  /// Height of the widget
-  final double listHeight;
+  /// Height of the lists on web / desktop
+  final double listHeightDesktop;
+
+  /// Height of the lists on web / desktop
+  final double? listHeightMobile;
 
   /// Width of the widget
   final double? widgetWidth;
@@ -104,9 +108,10 @@ class DualListBox extends StatelessWidget {
     this.onRemove,
     this.onRemoveAll,
     this.onChange,
-    this.listHeight = 350,
+    this.listHeightDesktop = 350,
     this.widgetWidth,
     this.borderRadius = 20,
+    this.listHeightMobile,
   }) : super(key: key);
 
   @override
@@ -130,8 +135,34 @@ class DualListBox extends StatelessWidget {
 
   _buildMobileWidget(BuildContext context, DualListBoxViewModel consumer) {
     return Container(
-      height: listHeight,
-      color: Colors.green,
+      decoration: BoxDecoration(color: backgroundColor),
+      width: widgetWidth ?? MediaQuery.of(context).size.width,
+      child: Column(
+        children: [
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 16, right: 16, top: 0, bottom: 8),
+                child: title != null ? _titleWidget(context) : Container(),
+              ),
+              searchable ? _buildSearchWidget(context, consumer) : Container()
+            ],
+          ),
+          filterByType ? _filterWidget(context, consumer) : Container(),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              _listsWidgetMobile(context, consumer),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: _middleButtons(
+                    context, consumer, Responsive.isMobile(context)),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -151,7 +182,12 @@ class DualListBox extends StatelessWidget {
                   child: title != null ? _titleWidget(context) : Container(),
                 ),
               ),
-              searchable ? _buildSearchWidget(context, consumer) : Container()
+              searchable
+                  ? Flexible(
+                      flex: 4,
+                      child: _buildSearchWidget(context, consumer),
+                    )
+                  : Container()
             ],
           ),
           filterByType ? _filterWidget(context, consumer) : Container(),
@@ -159,7 +195,10 @@ class DualListBox extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               _listsWidget(context, consumer),
-              _middleButtons(context, consumer),
+              Column(
+                children: _middleButtons(
+                    context, consumer, Responsive.isMobile(context)),
+              )
             ],
           ),
         ],
@@ -167,27 +206,29 @@ class DualListBox extends StatelessWidget {
     );
   }
 
-  Widget _middleButtons(BuildContext context, DualListBoxViewModel consumer) {
-    return Column(
-      children: [
-        Material(
-          color: Colors.white,
-          elevation: 2,
-          borderRadius: BorderRadius.circular(borderRadius / 2),
-          child: InkWell(
-            onTap: () {
-              List<DualListBoxItem> assignedItems =
-                  consumer.assignSelectedItems(Theme.of(context).primaryColor);
-              if (onAssign != null) {
-                onAssign!(assignedItems, consumer.assignedList,
-                    consumer.unAssignedList);
-              }
-              if (onChange != null) {
-                onChange!(consumer.assignedList, consumer.unAssignedList);
-              }
-            },
-            child: Container(
-              padding: EdgeInsets.all(12),
+  List<Widget> _middleButtons(
+      BuildContext context, DualListBoxViewModel consumer, bool isMobile) {
+    return [
+      Material(
+        color: Colors.white,
+        elevation: 2,
+        borderRadius: BorderRadius.circular(borderRadius / 2),
+        child: InkWell(
+          onTap: () {
+            List<DualListBoxItem> assignedItems =
+                consumer.assignSelectedItems(Theme.of(context).primaryColor);
+            if (onAssign != null) {
+              onAssign!(assignedItems, consumer.assignedList,
+                  consumer.unAssignedList);
+            }
+            if (onChange != null) {
+              onChange!(consumer.assignedList, consumer.unAssignedList);
+            }
+          },
+          child: Container(
+            padding: EdgeInsets.all(12),
+            child: RotatedBox(
+              quarterTurns: isMobile ? 1 : 0,
               child: Icon(
                 Icons.arrow_forward_ios,
                 size: 25,
@@ -195,25 +236,28 @@ class DualListBox extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 8),
-        Material(
-          color: Colors.white,
-          elevation: 2,
-          borderRadius: BorderRadius.circular(borderRadius / 2),
-          child: InkWell(
-            onTap: () {
-              List<DualListBoxItem> assignedtems =
-                  consumer.assignAllItems(Theme.of(context).primaryColor);
-              if (onAssignAll != null) {
-                onAssignAll!(assignedtems, consumer.assignedList,
-                    consumer.unAssignedList);
-              }
-              if (onChange != null) {
-                onChange!(consumer.assignedList, consumer.unAssignedList);
-              }
-            },
-            child: Container(
-              padding: EdgeInsets.all(12),
+      ),
+      SizedBox(height: 8, width: 8),
+      Material(
+        color: Colors.white,
+        elevation: 2,
+        borderRadius: BorderRadius.circular(borderRadius / 2),
+        child: InkWell(
+          onTap: () {
+            List<DualListBoxItem> assignedtems =
+                consumer.assignAllItems(Theme.of(context).primaryColor);
+            if (onAssignAll != null) {
+              onAssignAll!(
+                  assignedtems, consumer.assignedList, consumer.unAssignedList);
+            }
+            if (onChange != null) {
+              onChange!(consumer.assignedList, consumer.unAssignedList);
+            }
+          },
+          child: Container(
+            padding: EdgeInsets.all(12),
+            child: RotatedBox(
+              quarterTurns: isMobile ? 1 : 0,
               child: Icon(
                 Icons.double_arrow_rounded,
                 size: 25,
@@ -221,25 +265,28 @@ class DualListBox extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 8),
-        Material(
-          color: Colors.white,
-          elevation: 2,
-          borderRadius: BorderRadius.circular(borderRadius / 2),
-          child: InkWell(
-            onTap: () {
-              List<DualListBoxItem> removedItems =
-                  consumer.removeSelectedItems(Theme.of(context).primaryColor);
-              if (onRemove != null) {
-                onRemove!(removedItems, consumer.assignedList,
-                    consumer.unAssignedList);
-              }
-              if (onChange != null) {
-                onChange!(consumer.assignedList, consumer.unAssignedList);
-              }
-            },
-            child: Container(
-              padding: EdgeInsets.all(12),
+      ),
+      SizedBox(height: 8, width: 8),
+      Material(
+        color: Colors.white,
+        elevation: 2,
+        borderRadius: BorderRadius.circular(borderRadius / 2),
+        child: InkWell(
+          onTap: () {
+            List<DualListBoxItem> removedItems =
+                consumer.removeSelectedItems(Theme.of(context).primaryColor);
+            if (onRemove != null) {
+              onRemove!(
+                  removedItems, consumer.assignedList, consumer.unAssignedList);
+            }
+            if (onChange != null) {
+              onChange!(consumer.assignedList, consumer.unAssignedList);
+            }
+          },
+          child: Container(
+            padding: EdgeInsets.all(12),
+            child: RotatedBox(
+              quarterTurns: isMobile ? 1 : 0,
               child: Icon(
                 Icons.arrow_back_ios_new,
                 size: 25,
@@ -247,40 +294,40 @@ class DualListBox extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 8),
-        Material(
-          color: Colors.white,
-          elevation: 2,
-          borderRadius: BorderRadius.circular(borderRadius / 2),
-          child: InkWell(
-            onTap: () {
-              List<DualListBoxItem> removedItems =
-                  consumer.removeAllItems(Theme.of(context).primaryColor);
-              if (onRemoveAll != null) {
-                onRemoveAll!(removedItems, consumer.assignedList,
-                    consumer.unAssignedList);
-              }
-              if (onChange != null) {
-                onChange!(consumer.assignedList, consumer.unAssignedList);
-              }
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(borderRadius / 2),
-              ),
-              padding: EdgeInsets.all(12),
-              child: RotatedBox(
-                quarterTurns: 2,
-                child: Icon(
-                  Icons.double_arrow_rounded,
-                  size: 25,
-                ),
+      ),
+      SizedBox(height: 8, width: 8),
+      Material(
+        color: Colors.white,
+        elevation: 2,
+        borderRadius: BorderRadius.circular(borderRadius / 2),
+        child: InkWell(
+          onTap: () {
+            List<DualListBoxItem> removedItems =
+                consumer.removeAllItems(Theme.of(context).primaryColor);
+            if (onRemoveAll != null) {
+              onRemoveAll!(
+                  removedItems, consumer.assignedList, consumer.unAssignedList);
+            }
+            if (onChange != null) {
+              onChange!(consumer.assignedList, consumer.unAssignedList);
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(borderRadius / 2),
+            ),
+            padding: EdgeInsets.all(12),
+            child: RotatedBox(
+              quarterTurns: isMobile ? 3 : 2,
+              child: Icon(
+                Icons.double_arrow_rounded,
+                size: 25,
               ),
             ),
           ),
         ),
-      ],
-    );
+      )
+    ];
   }
 
   Widget _listsWidget(BuildContext context, DualListBoxViewModel consumer) {
@@ -314,12 +361,16 @@ class DualListBox extends StatelessWidget {
               )
             : Container(),
         Container(
-          height: listHeight,
+          height: listHeightDesktop,
           width: widgetWidth,
           child: Row(
             children: [
-              Expanded(child: _listWidget(consumer, context, false)),
-              Expanded(child: _listWidget(consumer, context, true)),
+              Expanded(
+                  child: _listWidget(
+                      consumer, context, false, Responsive.isMobile(context))),
+              Expanded(
+                  child: _listWidget(
+                      consumer, context, true, Responsive.isMobile(context))),
             ],
           ),
         ),
@@ -327,11 +378,53 @@ class DualListBox extends StatelessWidget {
     );
   }
 
-  Widget _listWidget(
-    DualListBoxViewModel consumer,
-    BuildContext context,
-    bool isAssignedList,
-  ) {
+  Widget _listsWidgetMobile(
+      BuildContext context, DualListBoxViewModel consumer) {
+    return Column(
+      children: [
+        Container(
+          child: Column(
+            children: [
+              (unAssignTitle != null || assignTitle != null)
+                  ? Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 8, top: 8),
+                      child: Text(
+                        assignTitle ?? '',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    )
+                  : Container(),
+              Container(
+                height: listHeightMobile ?? 250,
+                child: _listWidget(
+                    consumer, context, false, Responsive.isMobile(context)),
+              ),
+              SizedBox(height: 8),
+              Container(
+                height: listHeightMobile ?? 250,
+                child: _listWidget(
+                    consumer, context, true, Responsive.isMobile(context)),
+              ),
+              (unAssignTitle != null || assignTitle != null)
+                  ? Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 8, top: 8),
+                      child: Text(
+                        unAssignTitle ?? '',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    )
+                  : Container(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _listWidget(DualListBoxViewModel consumer, BuildContext context,
+      bool isAssignedList, bool isMobile) {
     List<DualListBoxItem> list = consumer.unAssignedList;
     if (isAssignedList) {
       list = consumer.assignedList;
@@ -341,8 +434,16 @@ class DualListBox extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(right: 4, left: 4),
       padding: EdgeInsets.only(
-          right: isAssignedList ? 16 : 64,
-          left: isAssignedList ? 64 : 16,
+          right: isMobile
+              ? 16
+              : isAssignedList
+                  ? 16
+                  : 64,
+          left: isMobile
+              ? 16
+              : isAssignedList
+                  ? 64
+                  : 16,
           top: 16,
           bottom: 16),
       decoration: BoxDecoration(
@@ -365,6 +466,17 @@ class DualListBox extends StatelessWidget {
             ? consumer.animatedAssignedListKey
             : consumer.animatedUnAssignedListKey,
         initialItemCount: list.length,
+        padding: EdgeInsets.only(
+            top: isMobile
+                ? isAssignedList
+                    ? 16
+                    : 0
+                : 0,
+            bottom: isMobile
+                ? isAssignedList
+                    ? 0
+                    : 16
+                : 0),
         itemBuilder: (context, index, animation) {
           return consumer.buildAnimatedListItem(
               isAssignedList, index, backgroundColor, animation);
@@ -378,9 +490,15 @@ class DualListBox extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            title ?? '',
-            style: Theme.of(context).textTheme.headline5,
+          Container(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width - 128),
+            child: AutoSizeText(
+              title ?? '',
+              maxLines: 1,
+              // overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.headline5,
+            ),
           ),
         ],
       ),
@@ -402,15 +520,12 @@ class DualListBox extends StatelessWidget {
   }
 
   _buildSearchWidget(BuildContext context, DualListBoxViewModel consumer) {
-    return Flexible(
-      flex: 4,
-      child: LenoreTextFormField(
-        controller: consumer.searchController,
-        label: 'Search',
-        onChange: (text) {
-          consumer.setSearchList(true);
-        },
-      ),
+    return LenoreTextFormField(
+      controller: consumer.searchController,
+      label: 'Search',
+      onChange: (text) {
+        consumer.setSearchList(true);
+      },
     );
   }
 }
