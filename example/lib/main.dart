@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 assignedItems: [
                   DualListBoxItem(
                     title: 'John',
-                    type: 'useruseruseruseruseruseruseruseruseruseruser',
+                    type: 'user',
                     widget: const DualListBoxItemWidget(
                       title: 'John',
                       icon: Icons.person,
@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   DualListBoxItem(
                     title: 'Mario',
-                    type: 'useruseruseruser',
+                    type: 'user',
                     widget: const DualListBoxItemWidget(
                       title: 'Mario',
                       icon: Icons.person,
@@ -98,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   DualListBoxItem(
                     title: 'Java Devs',
-                    type: 'groupgroupgroupgroupgroupgroupgroupgroupgroup',
+                    type: 'group',
                     widget: const DualListBoxItemWidget(
                       title: 'Java Devs',
                       icon: Icons.group,

@@ -322,11 +322,11 @@ class DualListBox extends StatelessWidget {
     bool isAssignedList,
   ) {
     List<DualListBoxItem> list = consumer.unAssignedList;
-    List<bool> selectedItems = consumer.selectedUnAssignedItems;
     if (isAssignedList) {
       list = consumer.assignedList;
-      selectedItems = consumer.selectedAssignedItems;
     }
+    List<DualListBoxItem> filteredList = [];
+
     return Container(
       margin: EdgeInsets.only(right: 4, left: 4),
       padding: EdgeInsets.only(

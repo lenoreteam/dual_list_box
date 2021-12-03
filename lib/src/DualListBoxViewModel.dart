@@ -25,6 +25,20 @@ class DualListBoxViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  List<DualListBoxItem> _assignedListInit = [];
+  List<DualListBoxItem> get assignedListInit => _assignedListInit;
+  set assignedListInit(List<DualListBoxItem> value) {
+    _assignedListInit = value;
+    notifyListeners();
+  }
+
+  List<DualListBoxItem> _unAssignedListInit = [];
+  List<DualListBoxItem> get unAssignedListInit => _unAssignedListInit;
+  set unAssignedListInit(List<DualListBoxItem> value) {
+    _unAssignedListInit = value;
+    notifyListeners();
+  }
+
   List<DualListBoxTypeItem> _types = [];
   List<DualListBoxTypeItem> get types => _types;
   set types(List<DualListBoxTypeItem> value) {
@@ -56,6 +70,30 @@ class DualListBoxViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  List<bool> _filteredAssignedItems = [];
+  List<bool> get filteredAssignedItems => _filteredAssignedItems;
+  set filteredAssignedItems(List<bool> value) {
+    _filteredAssignedItems = value;
+    notifyListeners();
+  }
+
+  togglefilteredAssignedItemByIndex(int index) {
+    _filteredAssignedItems[index] = !_filteredAssignedItems[index];
+    notifyListeners();
+  }
+
+  List<bool> _filteredUnAssignedItems = [];
+  List<bool> get filteredUnAssignedItems => _filteredUnAssignedItems;
+  set filteredUnAssignedItems(List<bool> value) {
+    _filteredUnAssignedItems = value;
+    notifyListeners();
+  }
+
+  togglefilteredUnAssignedItemByIndex(int index) {
+    _filteredUnAssignedItems[index] = !_filteredUnAssignedItems[index];
+    notifyListeners();
+  }
+
   Widget buildAnimatedListItem(bool isAssignedList, int index,
       Color backgroundColor, Animation<double> animation,
       {item}) {
@@ -64,11 +102,20 @@ class DualListBoxViewModel with ChangeNotifier {
     }
     List<DualListBoxItem> list = _unAssignedList;
     List<bool> selectedItems = _selectedUnAssignedItems;
+
+    bool _isAllTypesSelectedOrUnselected = isAllTypesSelectedOrUnselected();
+    if (!_isAllTypesSelectedOrUnselected) {
+      setFilteredList();
+    }
+    List<bool> filteredItems = _filteredUnAssignedItems;
     if (isAssignedList) {
       list = _assignedList;
+      filteredItems = _filteredAssignedItems;
       selectedItems = _selectedAssignedItems;
     }
+
     Widget? widget;
+
     if (selectedItems[index]) {
       widget = list[index].selectedWidget ??
           DualListBoxItemWidget(
@@ -78,6 +125,11 @@ class DualListBoxViewModel with ChangeNotifier {
     } else {
       widget = list[index].widget ??
           DualListBoxItemWidget(title: list[index].title ?? ' ');
+    }
+    if (!_isAllTypesSelectedOrUnselected) {
+      if (!filteredItems[index]) {
+        return Container();
+      }
     }
     return InkWell(
       onTap: () {
@@ -198,6 +250,8 @@ class DualListBoxViewModel with ChangeNotifier {
   setLists(List<DualListBoxItem> assignedList,
       List<DualListBoxItem> unAssignedList) {
     if (_isFirst) {
+      _assignedListInit = assignedList;
+      _unAssignedListInit = unAssignedList;
       _assignedList = assignedList;
       _unAssignedList = unAssignedList;
       setSelectedLists();
@@ -238,16 +292,6 @@ class DualListBoxViewModel with ChangeNotifier {
     print('types = $_types');
   }
 
-  Iterable<E> mapIndexed<E, T>(
-      Iterable<T> items, E Function(int index, T item) f) sync* {
-    var index = 0;
-
-    for (final item in items) {
-      yield f(index, item);
-      index = index + 1;
-    }
-  }
-
   List<Widget> buildTypeWidgets(BuildContext context) {
     List<Widget> widgets = [];
 
@@ -266,5 +310,58 @@ class DualListBoxViewModel with ChangeNotifier {
       );
     }
     return widgets;
+  }
+
+  setFilteredList() {
+    _filteredAssignedItems = [];
+    _filteredUnAssignedItems = [];
+
+    for (var item in _assignedList) {
+      for (var type in _types) {
+        if (type.name == item.type) {
+          if (type.isSelected) {
+            _filteredAssignedItems.add(true);
+          } else {
+            _filteredAssignedItems.add(false);
+          }
+        }
+      }
+    }
+
+    for (var item in _unAssignedList) {
+      for (var type in _types) {
+        print('item type = ${item.type}');
+        print('type = ${type.name}');
+        print('type.isSelected = ${type.isSelected}');
+        if (type.name == item.type) {
+          if (type.isSelected) {
+            _filteredUnAssignedItems.add(true);
+          } else {
+            _filteredUnAssignedItems.add(false);
+          }
+        }
+      }
+    }
+    print('_filteredAssignedItems = $_filteredAssignedItems');
+    print('_filteredUnAssignedItems = $_filteredUnAssignedItems');
+    // notifyListeners();
+  }
+
+  bool isAllTypesSelectedOrUnselected() {
+    bool isAllSelected = true;
+    bool isAllUnSelected = true;
+    for (var type in _types) {
+      if (type.isSelected) {
+        isAllUnSelected = false;
+      }
+      if (!type.isSelected) {
+        isAllSelected = false;
+      }
+      if (!isAllSelected && !isAllUnSelected) {
+        break;
+      }
+    }
+    print('isAllSelectedOrUnselected = ${isAllSelected || isAllUnSelected}');
+    return isAllSelected || isAllUnSelected;
   }
 }
