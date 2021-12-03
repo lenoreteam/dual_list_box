@@ -52,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 widgetWidth: 750,
                 backgroundColor: Colors.transparent,
                 filterByType: true,
+                searchable: true,
                 onRemove: (newlyRemovedItems, assignedList, unAssignedList) {
                   print('removedItems are: $newlyRemovedItems');
                 },

@@ -10,7 +10,11 @@ class DualListBoxViewModel with ChangeNotifier {
       GlobalKey<AnimatedListState>();
   final GlobalKey<AnimatedListState> animatedUnAssignedListKey =
       GlobalKey<AnimatedListState>();
+
   bool _isFirst = true;
+  bool isFilterByType = false;
+  bool isSearchable = false;
+
   List<DualListBoxItem> _assignedList = [];
   List<DualListBoxItem> get assignedList => _assignedList;
   set assignedList(List<DualListBoxItem> value) {
@@ -94,6 +98,32 @@ class DualListBoxViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  List<bool> _searchedAssignedItems = [];
+  List<bool> get searchedAssignedItems => _searchedAssignedItems;
+  set searchedAssignedItems(List<bool> value) {
+    _searchedAssignedItems = value;
+    notifyListeners();
+  }
+
+  togglesearchedAssignedItemByIndex(int index) {
+    _searchedAssignedItems[index] = !_searchedAssignedItems[index];
+    notifyListeners();
+  }
+
+  List<bool> _searchedUnAssignedItems = [];
+  List<bool> get searchedUnAssignedItems => _searchedUnAssignedItems;
+  set searchedUnAssignedItems(List<bool> value) {
+    _searchedUnAssignedItems = value;
+    notifyListeners();
+  }
+
+  togglesearchedUnAssignedItemByIndex(int index) {
+    _searchedUnAssignedItems[index] = !_searchedUnAssignedItems[index];
+    notifyListeners();
+  }
+
+  TextEditingController searchController = TextEditingController();
+
   Widget buildAnimatedListItem(bool isAssignedList, int index,
       Color backgroundColor, Animation<double> animation,
       {item}) {
@@ -107,11 +137,15 @@ class DualListBoxViewModel with ChangeNotifier {
     if (!_isAllTypesSelectedOrUnselected) {
       setFilteredList();
     }
+    setSearchList(false);
+
     List<bool> filteredItems = _filteredUnAssignedItems;
+    List<bool> searchedItems = _searchedUnAssignedItems;
     if (isAssignedList) {
       list = _assignedList;
       filteredItems = _filteredAssignedItems;
       selectedItems = _selectedAssignedItems;
+      searchedItems = _searchedAssignedItems;
     }
 
     Widget? widget;
@@ -128,9 +162,15 @@ class DualListBoxViewModel with ChangeNotifier {
     }
     if (!_isAllTypesSelectedOrUnselected) {
       if (!filteredItems[index]) {
-        return Container();
+        widget = Container();
       }
     }
+    if (isSearchable) {
+      if (!searchedItems[index]) {
+        widget = Container();
+      }
+    }
+
     return InkWell(
       onTap: () {
         if (isAssignedList) {
@@ -255,6 +295,7 @@ class DualListBoxViewModel with ChangeNotifier {
       _assignedList = assignedList;
       _unAssignedList = unAssignedList;
       setSelectedLists();
+      setSearchList(false);
       _isFirst = false;
     }
   }
@@ -330,9 +371,6 @@ class DualListBoxViewModel with ChangeNotifier {
 
     for (var item in _unAssignedList) {
       for (var type in _types) {
-        print('item type = ${item.type}');
-        print('type = ${type.name}');
-        print('type.isSelected = ${type.isSelected}');
         if (type.name == item.type) {
           if (type.isSelected) {
             _filteredUnAssignedItems.add(true);
@@ -342,9 +380,6 @@ class DualListBoxViewModel with ChangeNotifier {
         }
       }
     }
-    print('_filteredAssignedItems = $_filteredAssignedItems');
-    print('_filteredUnAssignedItems = $_filteredUnAssignedItems');
-    // notifyListeners();
   }
 
   bool isAllTypesSelectedOrUnselected() {
@@ -363,5 +398,33 @@ class DualListBoxViewModel with ChangeNotifier {
     }
     print('isAllSelectedOrUnselected = ${isAllSelected || isAllUnSelected}');
     return isAllSelected || isAllUnSelected;
+  }
+
+  void setSearchList(bool notify) {
+    _searchedAssignedItems = [];
+    _searchedUnAssignedItems = [];
+
+    for (var item in _assignedList) {
+      if ((item.title ?? '')
+          .toLowerCase()
+          .contains(searchController.text.toLowerCase())) {
+        _searchedAssignedItems.add(true);
+      } else {
+        _searchedAssignedItems.add(false);
+      }
+    }
+
+    for (var item in _unAssignedList) {
+      if ((item.title ?? '')
+          .toLowerCase()
+          .contains(searchController.text.toLowerCase())) {
+        _searchedUnAssignedItems.add(true);
+      } else {
+        _searchedUnAssignedItems.add(false);
+      }
+    }
+    if (notify) {
+      notifyListeners();
+    }
   }
 }

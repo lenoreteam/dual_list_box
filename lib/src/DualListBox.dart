@@ -33,6 +33,9 @@ class DualListBox extends StatelessWidget {
   final List<DualListBoxItem> assignedItems;
 
   /// Determine if the lists can be filtered by their item type.
+  ///
+  /// When a type is selected to filter the list, the items that are not the same type, will be hidden instead of removing them.
+  /// This means the selected status of them will be reserved.
   final bool filterByType;
 
   /// To show or not show the search widget. To be able to search through lists by their title.
@@ -114,6 +117,8 @@ class DualListBox extends StatelessWidget {
       ],
       child: Consumer<DualListBoxViewModel>(builder: (_, consumer, __) {
         consumer.setLists(assignedItems, unassignedItems);
+        consumer.isFilterByType = filterByType;
+        consumer.isSearchable = searchable;
         return Container(
           child: Responsive.isDesktop(context) || Responsive.isTablet(context)
               ? _buildDesktopWidget(context, consumer)
@@ -136,13 +141,19 @@ class DualListBox extends StatelessWidget {
       width: widgetWidth,
       child: Column(
         children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 16),
-            child: title != null ? _titleWidget(context) : Container(),
+          Row(
+            children: [
+              Flexible(
+                flex: 6,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 16, right: 16, top: 0, bottom: 16),
+                  child: title != null ? _titleWidget(context) : Container(),
+                ),
+              ),
+              searchable ? _buildSearchWidget(context, consumer) : Container()
+            ],
           ),
-
-          // (searchable && Responsive.isMobile(context)) ? _searchWidget(): Container(),
           filterByType ? _filterWidget(context, consumer) : Container(),
           Stack(
             alignment: Alignment.center,
@@ -386,6 +397,19 @@ class DualListBox extends StatelessWidget {
         spacing: 4,
         alignment: WrapAlignment.start,
         children: consumer.buildTypeWidgets(context),
+      ),
+    );
+  }
+
+  _buildSearchWidget(BuildContext context, DualListBoxViewModel consumer) {
+    return Flexible(
+      flex: 4,
+      child: LenoreTextFormField(
+        controller: consumer.searchController,
+        label: 'Search',
+        onChange: (text) {
+          consumer.setSearchList(true);
+        },
       ),
     );
   }
